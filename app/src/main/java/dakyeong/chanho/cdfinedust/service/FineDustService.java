@@ -7,15 +7,20 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dakyeong.chanho.cdfinedust.http.FineDustData;
 import dakyeong.chanho.cdfinedust.http.FineDustHttp;
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class FineDustService extends Service{
     private final String TAG = getClass().getSimpleName();
+    private boolean flag = true;
 
     @Nullable
     @Override
@@ -26,15 +31,17 @@ public class FineDustService extends Service{
 
     @Override
     public void onCreate() {
-        Log.d(TAG,"onCreate");
         super.onCreate();
+        Log.d(TAG,"onCreate");
+        FineDustHttp fineDustHttp = FineDustHttp.retrofit.create(FineDustHttp.class);
+        final Call<ArrayList<JsonObject>> call = fineDustHttp.getRepos("chano1025");
+        new Task().execute(call);
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG,"onStartCommand");
-
-        new Task().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -44,16 +51,18 @@ public class FineDustService extends Service{
         super.onDestroy();
     }
 
-    private class Task extends AsyncTask<Void,Void,String>{
+    private class Task extends AsyncTask<Call,Void,String>{
 
         @Override
-        protected String doInBackground(Void... params) {
-            FineDustHttp fineDustHttp = FineDustHttp.retrofit.create(FineDustHttp.class);
-            Call<List<FineDustData>> call = fineDustHttp.repoFineDustDatas("square","retrofit");
-
+        protected String doInBackground(Call... params) {
             try {
-                return  call.execute().body().toString();
-            } catch (IOException e) {
+                while (flag) {
+                    Call<ArrayList<JsonObject>> call = params[0];
+                    Response<ArrayList<JsonObject>> response = call.clone().execute();
+                    Log.d(TAG, response.body().toString());
+                    Thread.sleep(1000);
+                }
+            } catch (Exception e){
                 e.printStackTrace();
             }
             return null;
@@ -62,7 +71,6 @@ public class FineDustService extends Service{
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.d(TAG,s);
         }
     }
 }
