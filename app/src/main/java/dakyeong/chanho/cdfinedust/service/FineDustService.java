@@ -2,6 +2,7 @@ package dakyeong.chanho.cdfinedust.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -16,11 +17,17 @@ import java.util.List;
 import dakyeong.chanho.cdfinedust.http.FineDustData;
 import dakyeong.chanho.cdfinedust.http.FineDustHttp;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FineDustService extends Service{
     private final String TAG = getClass().getSimpleName();
-    private boolean flag = true;
+    private String sidoName = "대구";
+    private String pageNo = "1";
+    private String numOfRows = "10";
+    private String serviceKey = "gQYl4JUciJkbDq0Ssww2iuv95HA24DIEMNdrVGzNYPmZa14BMrD6qc6E0pM44KFtqIRU5iFD5S%2FQ828EZdiXWg%3D%3D";
+    private String ver = "1.3";
+    private String returnType = "json";
 
     @Nullable
     @Override
@@ -32,10 +39,29 @@ public class FineDustService extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
+
         Log.d(TAG,"onCreate");
         FineDustHttp fineDustHttp = FineDustHttp.retrofit.create(FineDustHttp.class);
-        final Call<ArrayList<JsonObject>> call = fineDustHttp.getRepos("chano1025");
-        new Task().execute(call);
+        final Call<JsonObject> call = fineDustHttp.getRepos("대구","1","10","gQYl4JUciJkbDq0Ssww2iuv95HA24DIEMNdrVGzNYPmZa14BMrD6qc6E0pM44KFtqIRU5iFD5S%2FQ828EZdiXWg%3D%3D","1.3","json");
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("Retrofit", response.toString());
+                if (response.body() != null)
+                    Log.e(TAG,response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.e("Err", t.getMessage());
+            }
+        });
+
+
+
+
+       // new Task().execute(call);
 
     }
 
@@ -51,26 +77,23 @@ public class FineDustService extends Service{
         super.onDestroy();
     }
 
-    private class Task extends AsyncTask<Call,Void,String>{
-
-        @Override
-        protected String doInBackground(Call... params) {
-            try {
-                while (flag) {
-                    Call<ArrayList<JsonObject>> call = params[0];
-                    Response<ArrayList<JsonObject>> response = call.clone().execute();
-                    Log.d(TAG, response.body().toString());
-                    Thread.sleep(1000);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-    }
+//    private class Task extends AsyncTask<Call,Void,String>{
+//
+//        @Override
+//        protected String doInBackground(Call... params) {
+//            try {
+//                Call<ArrayList<FineDustData>> call = params[0];
+//                Response<ArrayList<FineDustData>> response = call.clone().execute();
+//                Log.e(TAG, response.body().toString());
+//            } catch (Exception e){
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+//            super.onPostExecute(s);
+//        }
+//    }
 }
