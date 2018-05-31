@@ -1,13 +1,23 @@
 package dakyeong.chanho.cdfinedust.http;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+
 public class FineDustData {
 
-    String resultCode;
-    String resultMsg;
+    public List<list> list = new ArrayList<>();
+    public List<list> getList() { return list; }
 
+    public class list{
+        @SerializedName("coValue") float coValue;
 
-    @Override
-    public String toString(){
-        return resultCode + "(" + resultMsg + ")";
+        public float getCoValue() {
+            return coValue;
+        }
     }
 }

@@ -42,18 +42,18 @@ public class FineDustService extends Service{
 
         Log.d(TAG,"onCreate");
         FineDustHttp fineDustHttp = FineDustHttp.retrofit.create(FineDustHttp.class);
-        final Call<JsonObject> call = fineDustHttp.getRepos("대구","1","10","gQYl4JUciJkbDq0Ssww2iuv95HA24DIEMNdrVGzNYPmZa14BMrD6qc6E0pM44KFtqIRU5iFD5S%2FQ828EZdiXWg%3D%3D","1.3","json");
+        final Call<FineDustData> call = fineDustHttp.getRepos("대구","1","10","1.3","json");
 
-        call.enqueue(new Callback<JsonObject>() {
+        call.enqueue(new Callback<FineDustData>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            public void onResponse(Call<FineDustData> call, Response<FineDustData> response) {
                 Log.d("Retrofit", response.toString());
                 if (response.body() != null)
                     Log.e(TAG,response.body().toString());
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<FineDustData> call, Throwable t) {
                 Log.e("Err", t.getMessage());
             }
         });

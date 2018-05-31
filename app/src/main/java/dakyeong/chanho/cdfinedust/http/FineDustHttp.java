@@ -14,17 +14,11 @@ import retrofit2.http.Query;
 
 public interface FineDustHttp {
 
-//    //이건 됨
-//    @GET("openapi/services/rest/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?sidoName=대구&pageNo=1&numOfRows=10&ServiceKey=gQYl4JUciJkbDq0Ssww2iuv95HA24DIEMNdrVGzNYPmZa14BMrD6qc6E0pM44KFtqIRU5iFD5S%2FQ828EZdiXWg%3D%3D&ver=1.3&_returnType=json")
-//    Call<JsonObject> getRepos();
-
-    //이건 안됨
-    @GET("openapi/services/rest/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty")
-    Call<JsonObject> getRepos(
+    @GET("openapi/services/rest/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?ServiceKey=gQYl4JUciJkbDq0Ssww2iuv95HA24DIEMNdrVGzNYPmZa14BMrD6qc6E0pM44KFtqIRU5iFD5S%2FQ828EZdiXWg%3D%3D")
+    Call<FineDustData> getRepos(
             @Query("sidoName") String sidoName,
             @Query("pageNo") String pageNo,
             @Query("numOfRows") String numOfRows,
-            @Query("ServiceKey") String serviceKey,
             @Query("ver") String ver,
             @Query("_returnType") String returnType);
 
