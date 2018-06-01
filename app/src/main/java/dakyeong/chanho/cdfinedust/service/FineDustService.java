@@ -28,6 +28,7 @@ public class FineDustService extends Service{
     private String serviceKey = "gQYl4JUciJkbDq0Ssww2iuv95HA24DIEMNdrVGzNYPmZa14BMrD6qc6E0pM44KFtqIRU5iFD5S%2FQ828EZdiXWg%3D%3D";
     private String ver = "1.3";
     private String returnType = "json";
+    private FineDustData fineDustData;
 
     @Nullable
     @Override
@@ -48,8 +49,14 @@ public class FineDustService extends Service{
             @Override
             public void onResponse(Call<FineDustData> call, Response<FineDustData> response) {
                 Log.d("Retrofit", response.toString());
-                if (response.body() != null)
-                    Log.e(TAG,response.body().toString());
+                if (response.body() != null) {
+                    Log.e(TAG, response.body().toString());
+                }
+                fineDustData = response.body();
+                fineDustData.getList();
+
+
+
             }
 
             @Override
