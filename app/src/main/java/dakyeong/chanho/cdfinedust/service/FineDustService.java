@@ -25,7 +25,6 @@ public class FineDustService extends Service{
     private String sidoName = "대구";
     private String pageNo = "1";
     private String numOfRows = "10";
-    private String serviceKey = "gQYl4JUciJkbDq0Ssww2iuv95HA24DIEMNdrVGzNYPmZa14BMrD6qc6E0pM44KFtqIRU5iFD5S%2FQ828EZdiXWg%3D%3D";
     private String ver = "1.3";
     private String returnType = "json";
     private FineDustData fineDustData;
@@ -43,7 +42,7 @@ public class FineDustService extends Service{
 
         Log.d(TAG,"onCreate");
         FineDustHttp fineDustHttp = FineDustHttp.retrofit.create(FineDustHttp.class);
-        final Call<FineDustData> call = fineDustHttp.getRepos("대구","1","10","1.3","json");
+        final Call<FineDustData> call = fineDustHttp.getRepos(sidoName,pageNo,numOfRows,ver,returnType);
 
         call.enqueue(new Callback<FineDustData>() {
             @Override
@@ -53,9 +52,7 @@ public class FineDustService extends Service{
                     Log.e(TAG, response.body().toString());
                 }
                 fineDustData = response.body();
-                fineDustData.getList();
-
-
+                float co = fineDustData.getList().get(0).getCoValue();
 
             }
 
